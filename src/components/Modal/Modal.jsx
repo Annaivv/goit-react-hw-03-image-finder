@@ -1,11 +1,9 @@
-const Modal = () => {
+export const Modal = () => {
   return (
     <div class="overlay">
-      <div class="modal">
+      <div className="modal">
         <img src="" alt="" />
       </div>
     </div>
   );
 };
-
-export default Modal;
