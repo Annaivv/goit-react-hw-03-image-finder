@@ -5,12 +5,22 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import { Layout } from './Layout';
 import LoadMoreBtn from './LoadMoreButton/Button';
 import Searchbar from './Searchbar/Searchbar';
+import { addImage } from '../services/api';
 
 export default class App extends Component {
   state = {
     request: '',
+    results: [],
   };
 
+  async addResults() {
+    const results = await addImage();
+    console.log(results);
+    console.log(results.hits[0].id);
+    this.setState({
+      results: results.hits,
+    });
+  }
   // componentDidMount() {
   //   this.setState({ loading: true });
   //   fetch(
@@ -22,16 +32,17 @@ export default class App extends Component {
   // }
 
   handleFormSubmit = request => {
+    this.addResults();
     this.setState({ request });
   };
 
   render() {
-    // const { image, loading } = this.state;
+    const { request, results } = this.state;
     return (
       <Layout>
         <Searchbar onSubmit={this.handleFormSubmit} />
 
-        <ImageGallery />
+        <ImageGallery items={results} />
         {/* <LoadMoreBtn /> */}
         <Toaster />
         <GlobalStyle />
