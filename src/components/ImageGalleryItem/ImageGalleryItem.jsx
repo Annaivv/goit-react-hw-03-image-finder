@@ -1,8 +1,10 @@
+import { ImgItem, ImgItemImage } from './ImageGalleryItem.styled';
+
 const ImageGalleryItem = ({ image: { webformatURL } }) => {
   return (
-    <div className="gallery-item">
-      <img src={webformatURL} alt="picture" />
-    </div>
+    <ImgItem>
+      <ImgItemImage src={webformatURL} alt="picture" />
+    </ImgItem>
   );
 };
 

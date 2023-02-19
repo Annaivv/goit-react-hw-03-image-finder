@@ -1,6 +1,7 @@
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Component } from 'react';
 import { addImage } from 'services/api';
+import { ImageList } from './ImageGallery.styled';
 
 export default class ImageGallery extends Component {
   state = {
@@ -22,13 +23,17 @@ export default class ImageGallery extends Component {
   render() {
     const { items } = this.state;
     return (
-      <ul className="gallery">
-        {items.map(item => (
-          <li key={item.id}>
-            <ImageGalleryItem image={item} />
-          </li>
-        ))}
-      </ul>
+      <div>
+        {items.length > 0 && (
+          <ImageList>
+            {items.map(item => (
+              <li key={item.id}>
+                <ImageGalleryItem image={item} />
+              </li>
+            ))}
+          </ImageList>
+        )}
+      </div>
     );
   }
 }
