@@ -13,17 +13,25 @@ export default class ImageGallery extends Component {
   async componentDidUpdate(prevProps, _) {
     try {
       if (prevProps.imageQuery !== this.props.imageQuery) {
+        this.setState({ isLoading: true });
         const data = await addImage(this.props.imageQuery);
         this.setState({ items: data.hits });
       }
     } catch (error) {
-      this.setState({ error: 'Something went wrong' });
+      this.setState({ error });
+      console.log(error);
+    } finally {
+      this.setState({ isLoading: false });
     }
   }
   render() {
-    const { items } = this.state;
+    const { items, isLoading, error } = this.state;
+    const { imageQuery } = this.props;
     return (
       <div>
+        {error && <p>{error.message}</p>}
+        {isLoading && <p>Loading, please wait</p>}
+        {!imageQuery && <p>What would you like to find?</p>}
         {items.length > 0 && (
           <ImageList>
             {items.map(item => (
