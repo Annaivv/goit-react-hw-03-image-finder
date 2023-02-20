@@ -9,12 +9,19 @@ import Searchbar from './Searchbar/Searchbar';
 
 export default class App extends Component {
   state = {
+    page: 1,
     query: '',
   };
 
   handleFormSubmit = query => {
     this.setState({ query });
   };
+
+  // loadMore = () => {
+  //   this.setState(prevState => ({
+  //     page: prevState.page + 1,
+  //   }));
+  // };
 
   render() {
     const { query } = this.state;
