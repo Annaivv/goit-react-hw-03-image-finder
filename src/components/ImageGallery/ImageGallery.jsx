@@ -17,11 +17,15 @@ export default class ImageGallery extends Component {
       if (prevProps.imageQuery !== this.props.imageQuery) {
         this.setState({ isLoading: true, error: null });
         const data = await addImage(this.props.imageQuery);
-        this.setState({ items: data.hits });
+        if (data.hits.length === 0) {
+          this.setState({ isLoading: false });
+          toast.error('No results for your search');
+          return;
+        }
+        this.setState({ items: data.hits, isLoading: false });
       }
     } catch {
       toast.error('Something went wrong');
-    } finally {
       this.setState({ isLoading: false });
     }
   }
