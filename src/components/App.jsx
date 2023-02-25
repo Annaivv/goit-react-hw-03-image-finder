@@ -10,6 +10,7 @@ export default class App extends Component {
   state = {
     query: '',
     showModal: true,
+    // results: [],
   };
 
   handleFormSubmit = query => {

@@ -6,14 +6,19 @@ const modalRoot = document.querySelector('#modal-root');
 
 export class Modal extends Component {
   componentDidMount() {
-    window.addEventListener('keydown', e => {
-      if (e.code === 'Escape') {
-        console.log('ESC pressed');
-        this.props.onClose();
-      }
-    });
+    window.addEventListener('keydown', this.handleKeyDown);
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown = e => {
+    if (e.code === 'Escape') {
+      console.log('ESC pressed');
+      this.props.onClose();
+    }
+  };
   render() {
     return createPortal(
       <Overlay onClick={() => this.props.onClose()}>
