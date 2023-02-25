@@ -9,7 +9,6 @@ import Searchbar from './Searchbar/Searchbar';
 
 export default class App extends Component {
   state = {
-    page: 1,
     query: '',
   };
 
@@ -25,13 +24,13 @@ export default class App extends Component {
   // };
 
   render() {
-    const { query } = this.state;
+    const { query, page } = this.state;
     return (
       <Layout>
         <Searchbar onSubmit={this.handleFormSubmit} />
 
-        <ImageGallery imageQuery={query} />
-        <LoadMoreBtn />
+        <ImageGallery imageQuery={query} page={page} />
+        {/* <LoadMoreBtn onClick={this.loadMore} /> */}
         <Toaster />
         <GlobalStyle />
       </Layout>

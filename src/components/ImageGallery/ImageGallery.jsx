@@ -8,45 +8,57 @@ import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 export default class ImageGallery extends Component {
   state = {
     items: [],
-    isLoading: false,
     error: null,
+    status: 'idle',
   };
 
   async componentDidUpdate(prevProps, _) {
     try {
       if (prevProps.imageQuery !== this.props.imageQuery) {
-        this.setState({ isLoading: true, error: null });
+        this.setState({
+          status: 'pending',
+        });
         const data = await addImage(this.props.imageQuery);
         if (data.hits.length === 0) {
-          this.setState({ isLoading: false });
           toast.error('No results for your search');
+          this.setState({ status: 'idle' });
           return;
         }
-        this.setState({ items: data.hits, isLoading: false });
+        this.setState({ items: data.hits, status: 'resolved' });
       }
     } catch {
       toast.error('Something went wrong');
-      this.setState({ isLoading: false });
+      this.setState({ status: 'rejected' });
     }
   }
   render() {
-    const { items, isLoading, error } = this.state;
+    const { items, error, status } = this.state;
+    if (status === 'idle') {
+      return;
+    }
 
-    return (
-      <div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        {isLoading && <Loader />}
+    if (status === 'pending') {
+      return <Loader />;
+    }
 
-        {items.length > 0 && !isLoading && (
-          <ImageList>
-            {items.map(item => (
-              <li key={item.id}>
-                <ImageGalleryItem image={item} />
-              </li>
-            ))}
-          </ImageList>
-        )}
-      </div>
-    );
+    if (status === 'rejected') {
+      return <p style={{ color: 'red' }}>{error.message}</p>;
+    }
+
+    if (status === 'resolved') {
+      return (
+        <div>
+          {items.length > 0 && status !== 'pending' && (
+            <ImageList>
+              {items.map(item => (
+                <li key={item.id}>
+                  <ImageGalleryItem image={item} />
+                </li>
+              ))}
+            </ImageList>
+          )}
+        </div>
+      );
+    }
   }
 }
