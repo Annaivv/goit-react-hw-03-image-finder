@@ -4,6 +4,7 @@ import { addImage } from 'services/api';
 import { ImageList } from './ImageGallery.styled';
 import Loader from 'components/Loader/Loader';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
+import LoadMoreBtn from 'components/LoadMoreButton/Button';
 
 export default class ImageGallery extends Component {
   state = {
@@ -15,9 +16,7 @@ export default class ImageGallery extends Component {
   async componentDidUpdate(prevProps, _) {
     try {
       if (prevProps.imageQuery !== this.props.imageQuery) {
-        this.setState({
-          status: 'pending',
-        });
+        this.setState({ status: 'pending' });
         const data = await addImage(this.props.imageQuery);
         if (data.hits.length === 0) {
           toast.error('No results for your search');
@@ -32,7 +31,7 @@ export default class ImageGallery extends Component {
     }
   }
   render() {
-    const { items, error, status } = this.state;
+    const { items, status } = this.state;
     if (status === 'idle') {
       return;
     }
@@ -42,21 +41,20 @@ export default class ImageGallery extends Component {
     }
 
     if (status === 'rejected') {
-      return <p style={{ color: 'red' }}>{error.message}</p>;
+      return <p style={{ color: 'red' }}>Something went wrong</p>;
     }
 
     if (status === 'resolved') {
       return (
         <div>
-          {items.length > 0 && status !== 'pending' && (
-            <ImageList>
-              {items.map(item => (
-                <li key={item.id}>
-                  <ImageGalleryItem image={item} />
-                </li>
-              ))}
-            </ImageList>
-          )}
+          <ImageList>
+            {items.map(item => (
+              <li key={item.id}>
+                <ImageGalleryItem image={item} />
+              </li>
+            ))}
+          </ImageList>
+          <LoadMoreBtn />
         </div>
       );
     }

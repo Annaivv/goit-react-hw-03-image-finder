@@ -3,34 +3,32 @@ import { Toaster } from 'react-hot-toast';
 import { GlobalStyle } from './GlobalStyle';
 import ImageGallery from './ImageGallery/ImageGallery';
 import { Layout } from './Layout';
-import LoadMoreBtn from './LoadMoreButton/Button';
+import { Modal } from './Modal/Modal';
 import Searchbar from './Searchbar/Searchbar';
-// import { addImage } from '../services/api';
 
 export default class App extends Component {
   state = {
     query: '',
+    showModal: true,
   };
 
   handleFormSubmit = query => {
     this.setState({ query });
   };
 
-  // loadMore = () => {
-  //   this.setState(prevState => {
-  //     return { page: prevState.page + 1 };
-  //   });
-  //   console.log(this.state.page);
-  // };
+  closeModal = () => {
+    this.setState({ showModal: false });
+  };
 
   render() {
-    const { query, page } = this.state;
+    const { query, showModal } = this.state;
+
     return (
       <Layout>
         <Searchbar onSubmit={this.handleFormSubmit} />
+        <ImageGallery imageQuery={query} />
 
-        <ImageGallery imageQuery={query} page={page} />
-        {/* <LoadMoreBtn onClick={this.loadMore} /> */}
+        {showModal && <Modal onClose={this.closeModal} />}
         <Toaster />
         <GlobalStyle />
       </Layout>
