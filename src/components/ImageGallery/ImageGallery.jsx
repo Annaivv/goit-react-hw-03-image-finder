@@ -1,6 +1,4 @@
 import { Component } from 'react';
-// import toast from 'react-hot-toast';
-// import { addImage } from 'services/api';
 import { ImageList } from './ImageGallery.styled';
 import Loader from 'components/Loader/Loader';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
@@ -38,7 +36,11 @@ export default class ImageGallery extends Component {
               </li>
             ))}
           </ImageList>
-          <LoadMoreBtn />
+          <LoadMoreBtn
+            onBtnClick={() => {
+              this.props.onLoadMoreClick();
+            }}
+          />
         </div>
       );
     }

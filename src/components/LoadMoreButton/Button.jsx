@@ -1,7 +1,11 @@
 import { StyledBtn } from './LoadMoreButton.styled';
 
-const LoadMoreBtn = () => {
-  return <StyledBtn type="button">Load more</StyledBtn>;
+const LoadMoreBtn = ({ onBtnClick }) => {
+  return (
+    <StyledBtn type="button" onClick={onBtnClick}>
+      Load more
+    </StyledBtn>
+  );
 };
 
 export default LoadMoreBtn;

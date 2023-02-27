@@ -10,6 +10,7 @@ import { addImage } from 'services/api';
 export default class App extends Component {
   state = {
     query: '',
+    page: 1,
     showModal: false,
     results: [],
     error: null,
@@ -19,9 +20,12 @@ export default class App extends Component {
 
   async componentDidUpdate(_, prevState) {
     try {
-      if (prevState.query !== this.state.query) {
+      if (
+        prevState.query !== this.state.query ||
+        prevState.page !== this.state.page
+      ) {
         this.setState({ status: 'pending' });
-        const data = await addImage(this.state.query);
+        const data = await addImage(this.state.query, this.state.page);
         if (data.hits.length === 0) {
           toast.error('No results for your search');
           this.setState({ status: 'idle' });
@@ -31,6 +35,9 @@ export default class App extends Component {
           results: data.hits,
           status: 'resolved',
         });
+      }
+      if (prevState.query !== this.state.query) {
+        this.setState({ page: 1 });
       }
     } catch {
       toast.error('Something went wrong');
@@ -55,6 +62,13 @@ export default class App extends Component {
     console.log(activeItem);
   };
 
+  loadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+      results: [...prevState.results, this.state.results],
+    }));
+  };
+
   render() {
     const { showModal, results, status, activeItem } = this.state;
 
@@ -66,6 +80,7 @@ export default class App extends Component {
           renderCondition={status}
           onImgClick={this.openModal}
           findActive={this.findActiveItem}
+          onLoadMoreClick={this.loadMore}
         />
 
         {showModal && (
