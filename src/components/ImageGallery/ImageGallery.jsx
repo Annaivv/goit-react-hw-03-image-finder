@@ -1,55 +1,39 @@
 import { Component } from 'react';
-import toast from 'react-hot-toast';
-import { addImage } from 'services/api';
+// import toast from 'react-hot-toast';
+// import { addImage } from 'services/api';
 import { ImageList } from './ImageGallery.styled';
 import Loader from 'components/Loader/Loader';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import LoadMoreBtn from 'components/LoadMoreButton/Button';
 
 export default class ImageGallery extends Component {
-  state = {
-    items: [],
-    error: null,
-    status: 'idle',
-  };
-
-  async componentDidUpdate(prevProps, _) {
-    try {
-      if (prevProps.imageQuery !== this.props.imageQuery) {
-        this.setState({ status: 'pending' });
-        const data = await addImage(this.props.imageQuery);
-        if (data.hits.length === 0) {
-          toast.error('No results for your search');
-          this.setState({ status: 'idle' });
-          return;
-        }
-        this.setState({ items: data.hits, status: 'resolved' });
-      }
-    } catch {
-      toast.error('Something went wrong');
-      this.setState({ status: 'rejected' });
-    }
-  }
   render() {
-    const { items, status } = this.state;
-    if (status === 'idle') {
+    const { items, renderCondition } = this.props;
+
+    if (renderCondition === 'idle') {
       return;
     }
 
-    if (status === 'pending') {
+    if (renderCondition === 'pending') {
       return <Loader />;
     }
 
-    if (status === 'rejected') {
+    if (renderCondition === 'rejected') {
       return <p style={{ color: 'red' }}>Something went wrong</p>;
     }
 
-    if (status === 'resolved') {
+    if (renderCondition === 'resolved') {
       return (
         <div>
           <ImageList>
             {items.map(item => (
-              <li key={item.id}>
+              <li
+                key={item.id}
+                onClick={() => {
+                  this.props.findActive(item.largeImageURL);
+                  this.props.onImgClick();
+                }}
+              >
                 <ImageGalleryItem image={item} />
               </li>
             ))}
