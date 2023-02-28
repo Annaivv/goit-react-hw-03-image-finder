@@ -32,16 +32,12 @@ export default class App extends Component {
           return;
         }
         if (prevState.query !== this.state.query) {
-          this.setState({ results: [] });
+          this.setState({ results: [], page: 1 });
         }
         this.setState(prevState => ({
           results: [...prevState.results, ...data.hits],
           status: 'resolved',
         }));
-      }
-
-      if (prevState.query !== this.state.query) {
-        this.setState({ page: 1 });
       }
     } catch {
       toast.error('Something went wrong');
