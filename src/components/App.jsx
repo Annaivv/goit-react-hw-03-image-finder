@@ -31,11 +31,15 @@ export default class App extends Component {
           this.setState({ status: 'idle' });
           return;
         }
-        this.setState({
-          results: data.hits,
+        if (prevState.query !== this.state.query) {
+          this.setState({ results: [] });
+        }
+        this.setState(prevState => ({
+          results: [...prevState.results, ...data.hits],
           status: 'resolved',
-        });
+        }));
       }
+
       if (prevState.query !== this.state.query) {
         this.setState({ page: 1 });
       }
@@ -65,7 +69,6 @@ export default class App extends Component {
   loadMore = () => {
     this.setState(prevState => ({
       page: prevState.page + 1,
-      results: [...prevState.results, this.state.results],
     }));
   };
 
