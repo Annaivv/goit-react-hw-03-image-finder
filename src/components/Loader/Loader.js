@@ -7,9 +7,7 @@ const Loader = () => {
       width="80"
       ariaLabel="progress-bar-loading"
       wrapperStyle={{
-        position: 'absolute',
-        top: '100px',
-        left: '45%',
+        margin: '0 auto',
       }}
       wrapperClass="progress-bar-wrapper"
       borderColor="#F4442E"
