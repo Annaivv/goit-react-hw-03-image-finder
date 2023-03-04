@@ -4,14 +4,16 @@ import { GlobalStyle } from './GlobalStyle';
 import ImageGallery from './ImageGallery/ImageGallery';
 import { Layout } from './Layout';
 import Searchbar from './Searchbar/Searchbar';
-import { addImage } from 'services/api';
+// import { addImage } from 'services/api';
 import Loader from './Loader/Loader';
+import { addImageFirstPage, addImageNextPages } from 'services/api';
 
 export default class App extends Component {
   state = {
     query: '',
     isLoading: false,
     page: 1,
+
     results: [],
     error: null,
   };
@@ -20,17 +22,24 @@ export default class App extends Component {
     try {
       if (prevState.query !== this.state.query) {
         this.setState({ isLoading: true });
-        const data = await addImage(this.state.query, 1);
+        const data = await addImageFirstPage(this.state.query);
         if (data.hits.length === 0) {
           toast.error('No results for your search');
           this.setState({ isLoading: false });
           return;
         }
-        this.setState({ results: data.hits, isLoading: false, page: 1 });
+        this.setState({
+          results: data.hits,
+          isLoading: false,
+        });
       }
 
-      if (prevState.page !== this.state.page) {
-        const data = await addImage(this.state.query, this.state.page);
+      if (
+        prevState.page !== this.state.page &&
+        prevState.query === this.state.query
+      ) {
+        const data = await addImageNextPages(this.state.query, this.state.page);
+
         this.setState(prevState => ({
           results: [...prevState.results, ...data.hits],
         }));
