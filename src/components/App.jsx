@@ -24,7 +24,11 @@ export default class App extends Component {
         prevState.query !== this.state.query
       ) {
         const data = await addImage(this.state.query, this.state.page);
-
+        if (data.hits.length === 0) {
+          toast.error(`No results for ${this.state.query}`);
+          this.setState({ isLoading: false });
+          return;
+        }
         this.setState(prevState => ({
           results: [...prevState.results, ...data.hits],
         }));
@@ -60,6 +64,7 @@ export default class App extends Component {
         ) : (
           <ImageGallery items={results} onLoadMoreClick={this.loadMore} />
         )}
+
         <Toaster />
         <GlobalStyle />
       </Layout>
