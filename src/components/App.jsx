@@ -12,7 +12,7 @@ export default class App extends Component {
     query: '',
     isLoading: false,
     page: 1,
-
+    total: 0,
     results: [],
     error: null,
   };
@@ -31,6 +31,7 @@ export default class App extends Component {
         }
         this.setState(prevState => ({
           results: [...prevState.results, ...data.hits],
+          total: data.totalHits,
         }));
       }
     } catch (error) {
@@ -54,7 +55,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { isLoading, results } = this.state;
+    const { isLoading, results, total } = this.state;
 
     return (
       <Layout>
@@ -62,7 +63,11 @@ export default class App extends Component {
         {isLoading ? (
           <Loader />
         ) : (
-          <ImageGallery items={results} onLoadMoreClick={this.loadMore} />
+          <ImageGallery
+            items={results}
+            onLoadMoreClick={this.loadMore}
+            allResults={total}
+          />
         )}
 
         <Toaster />

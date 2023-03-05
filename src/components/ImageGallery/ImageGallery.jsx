@@ -7,7 +7,7 @@ import LoadMoreBtn from 'components/LoadMoreButton/Button';
 
 export default class ImageGallery extends Component {
   render() {
-    const { items, onLoadMoreClick } = this.props;
+    const { items, onLoadMoreClick, allResults } = this.props;
 
     return (
       <div>
@@ -19,7 +19,7 @@ export default class ImageGallery extends Component {
           ))}
         </ImageList>
 
-        {items.length > 0 && (
+        {items.length > 0 && items.length < allResults && (
           <LoadMoreBtn onBtnClick={() => onLoadMoreClick()} />
         )}
       </div>
